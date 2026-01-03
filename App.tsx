@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, UserRole, Assignment, Submission, Section } from './types.ts';
 import { INITIAL_USERS, INITIAL_ASSIGNMENTS, INITIAL_SUBMISSIONS } from './mockData.ts';
-import Layout from './components/Layout.tsx';
+import Layout from './Layout.tsx';
 import AdminDashboard from './views/AdminDashboard.tsx';
 import TeacherDashboard from './views/TeacherDashboard.tsx';
 import StudentDashboard from './views/StudentDashboard.tsx';
