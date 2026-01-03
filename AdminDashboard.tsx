@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User, Assignment, Submission, Section, UserRole } from './types.ts';
-import StatCard from './StatCard.tsx';
+import StatCard from './StatCard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface AdminDashboardProps {
