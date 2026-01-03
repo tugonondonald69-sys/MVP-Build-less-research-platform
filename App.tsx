@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { User, UserRole, Assignment, Submission, Section } from './types.ts';
 import { INITIAL_USERS, INITIAL_ASSIGNMENTS, INITIAL_SUBMISSIONS } from './mockData.ts';
-import Layout from './components/Layout.tsx';
-import AdminDashboard from './views/AdminDashboard.tsx';
-import TeacherDashboard from './views/TeacherDashboard.tsx';
-import StudentDashboard from './views/StudentDashboard.tsx';
+import Layout from './Layout';
+import AdminDashboard from './AdminDashboard';
+import TeacherDashboard from './TeacherDashboard';
+import StudentDashboard from './StudentDashboard';
 import { loadState, saveState } from './db.ts';
 
 const App: React.FC = () => {
