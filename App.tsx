@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { User, UserRole, Assignment, Submission, Section } from './types.ts';
 import { INITIAL_USERS, INITIAL_ASSIGNMENTS, INITIAL_SUBMISSIONS } from './mockData.ts';
-import Layout from './Layout';
-import AdminDashboard from './AdminDashboard';
-import TeacherDashboard from './TeacherDashboard';
-import StudentDashboard from './StudentDashboard';
+import Layout from './components/Layout.tsx';
+import AdminDashboard from './views/AdminDashboard.tsx';
+import TeacherDashboard from './views/TeacherDashboard.tsx';
+import StudentDashboard from './views/StudentDashboard.tsx';
 import { loadState, saveState } from './db.ts';
 
 const App: React.FC = () => {
@@ -237,15 +237,36 @@ const App: React.FC = () => {
               <form onSubmit={handleLogin} className="space-y-6">
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
-                  <input type="text" required value={fullNameInput} onChange={e => setFullNameInput(e.target.value)} className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl" />
+                  <input type="text" required value={fullNameInput} onChange={e => setFullNameInput(e.target.value)} className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all" />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2">Password</label>
-                  <input type={showPassword ? "text" : "password"} required value={password} onChange={e => setPassword(e.target.value)} className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl" />
+                  <div className="relative">
+                    <input 
+                      type={showPassword ? "text" : "password"} 
+                      required 
+                      value={password} 
+                      onChange={e => setPassword(e.target.value)} 
+                      className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all pr-12" 
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-emerald-600 transition-colors"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                    </button>
+                  </div>
                 </div>
-                <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-bold">Sign In</button>
+                {loginError && (
+                  <div className="bg-rose-50 border border-rose-200 text-rose-600 px-4 py-3 rounded-2xl text-xs font-bold text-center animate-in fade-in slide-in-from-top-1">
+                    sorry, wrong credentials
+                  </div>
+                )}
+                <button type="submit" className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-bold shadow-lg shadow-emerald-100 hover:bg-emerald-700 active:scale-[0.98] transition-all">Sign In</button>
                 <div className="text-center">
-                  <button type="button" onClick={() => setIsResetMode(true)} className="text-xs font-bold text-gray-400 uppercase tracking-widest">Need Help?</button>
+                  <button type="button" onClick={() => setIsResetMode(true)} className="text-xs font-bold text-gray-400 uppercase tracking-widest hover:text-gray-600 transition-colors">Need Help?</button>
                 </div>
               </form>
             )}
