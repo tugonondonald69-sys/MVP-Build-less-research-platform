@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { User, Assignment, Submission, SubmissionFile } from '../types';
+import { User, UserRole, Assignment, Submission, Section } from './types';
 
 interface StudentDashboardProps {
   user: User;
