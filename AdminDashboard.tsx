@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { User, UserRole, Assignment, Submission, Section } from './types';
-import StatCard from './StatCard.tsx';
+import { User, Assignment, Submission, Section, UserRole } from './types.ts';
+import StatCard from '../components/StatCard.tsx';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface AdminDashboardProps {
@@ -85,7 +85,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ users, assignments, sub
               <tr key={u.id} className="hover:bg-gray-50/50">
                 <td className="px-6 py-4">
                   <div className="font-bold text-gray-900 text-sm">{u.name}</div>
-                  <div className="text-[10px] font-mono text-gray-400">PWD: {u.password}</div>
+                  <div className="text-[10px] font-mono text-gray-400">PWD: {u.password} {u.subject && `• Subject: ${u.subject}`}</div>
                 </td>
                 <td className="px-6 py-4">
                   <span className="px-2 py-0.5 rounded text-[9px] font-black uppercase bg-emerald-100 text-emerald-700">{u.role}</span>
@@ -151,17 +151,35 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ users, assignments, sub
                   <option value={UserRole.TEACHER}>Teacher</option>
                   <option value={UserRole.ADMIN}>Admin</option>
                 </select>
+                
+                {newUserRole === UserRole.TEACHER && (
+                  <input 
+                    type="text" 
+                    required 
+                    value={newUserSubject} 
+                    onChange={e => setNewUserSubject(e.target.value)} 
+                    className="w-full px-4 py-3 bg-emerald-50 border border-emerald-100 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all" 
+                    placeholder="Specific Subject (e.g., Physics)" 
+                  />
+                )}
+
                 <select disabled={newUserRole === UserRole.ADMIN} value={newUserSection} onChange={e => setNewUserSection(e.target.value as Section)} className="w-full px-4 py-3 bg-gray-50 border rounded-2xl">
-                  <option value={Section.EINSTEIN_G11}>Einstein (G11)</option>
-                  <option value={Section.GALILEI_G12}>Galilei (G12)</option>
+                  <option value={Section.EINSTEIN_G11}>Einstein (Grade 11)</option>
+                  <option value={Section.GALILEI_G12}>Galilei (Grade 12)</option>
                 </select>
                 <button className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black">Confirm Enrollment</button>
               </form>
             </div>
           </div>
-          <div className="lg:col-span-8 space-y-8">
-             <UserTable title="Einstein Field (Grade 11)" sectionUsers={users.filter(u => u.section === Section.EINSTEIN_G11)} />
-             <UserTable title="Galilei Field (Grade 12)" sectionUsers={users.filter(u => u.section === Section.GALILEI_G12)} />
+          <div className="lg:col-span-8 space-y-12">
+             <div className="space-y-4">
+               <h4 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] px-2">Einstein Field (Grade 11)</h4>
+               <UserTable title="Einstein (Grade 11)" sectionUsers={users.filter(u => u.section === Section.EINSTEIN_G11)} />
+             </div>
+             <div className="space-y-4">
+               <h4 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] px-2">Galilei Field (Grade 12)</h4>
+               <UserTable title="Galilei (Grade 12)" sectionUsers={users.filter(u => u.section === Section.GALILEI_G12)} />
+             </div>
           </div>
         </div>
       )}
