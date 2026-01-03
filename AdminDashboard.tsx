@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { User, Assignment, Submission, Section, UserRole } from '../types.ts';
 import StatCard from '../components/StatCard.tsx';
-import { analyzeResearchData } from '../geminiService.ts';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface AdminDashboardProps {
@@ -15,8 +14,6 @@ interface AdminDashboardProps {
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ users, assignments, submissions, onAddUser, onDeleteUser, onUpdateUser }) => {
   const [activeTab, setActiveTab] = useState<'stats' | 'users'>('stats');
-  const [aiInsight, setAiInsight] = useState<string>('');
-  const [loadingAi, setLoadingAi] = useState(false);
   const [confirmDeleteUser, setConfirmDeleteUser] = useState<User | null>(null);
   const [resettingUser, setResettingUser] = useState<User | null>(null);
   const [newPassword, setNewPassword] = useState('');
@@ -51,13 +48,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ users, assignments, sub
     { name: 'Galilei (On-Time)', value: galileiStats.onTime, fill: '#059669' },
     { name: 'Galilei (Late)', value: galileiStats.late, fill: '#34d399' },
   ];
-
-  const fetchAiInsight = async () => {
-    setLoadingAi(true);
-    const insight = await analyzeResearchData(assignments, submissions);
-    setAiInsight(insight || '');
-    setLoadingAi(false);
-  };
 
   const handleCreateUser = (e: React.FormEvent) => {
     e.preventDefault();
@@ -133,27 +123,19 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ users, assignments, sub
             <StatCard title="Galilei ON-TIME" value={`${galileiStats.rate}%`} icon="fa-telescope" color="bg-emerald-700" />
             <StatCard title="Galilei Late" value={galileiStats.late} icon="fa-hourglass-half" color="bg-emerald-600" />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 bg-white p-8 rounded-3xl border border-gray-100 shadow-sm min-h-[400px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" fontSize={10} fontWeight="700" />
-                  <YAxis fontSize={10} />
-                  <Tooltip />
-                  <Bar dataKey="value" radius={[10, 10, 0, 0]}>
-                    {chartData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="bg-emerald-950 text-white p-8 rounded-3xl flex flex-col justify-between">
-              <h3 className="text-lg font-bold">Stride Analyst AI</h3>
-              <p className="text-emerald-100 text-sm">{aiInsight || "Ready to audit performance patterns."}</p>
-              <button onClick={fetchAiInsight} disabled={loadingAi} className="w-full py-4 bg-emerald-500 text-emerald-950 rounded-2xl font-black">
-                {loadingAi ? 'Decoding...' : 'Run Performance Audit'}
-              </button>
-            </div>
+          <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm min-h-[450px]">
+            <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Submission Comparative Analysis</h3>
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="name" fontSize={10} fontWeight="700" />
+                <YAxis fontSize={10} />
+                <Tooltip />
+                <Bar dataKey="value" radius={[10, 10, 0, 0]}>
+                  {chartData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       ) : (
